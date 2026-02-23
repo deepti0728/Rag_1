@@ -9,6 +9,12 @@ import os
 
 st.set_page_config(page_title="WhizBot", layout="centered")
 
+# Absolute paths
+BASE_DIR = os.path.dirname(__file__)
+DATA_FOLDER = os.path.join(BASE_DIR, "data")
+VECTOR_STORE_FOLDER = os.path.join(BASE_DIR, "vector_store")
+VECTOR_STORE_FILE = os.path.join(VECTOR_STORE_FOLDER, "index.faiss")
+
 # -------------------- SIDEBAR --------------------
 st.sidebar.image("robot3.png", use_container_width=True)
 st.sidebar.title("WhizBot Chatbot")
@@ -22,12 +28,14 @@ st.write("Ask any question about whizbot.")
 embeddings = get_embeddings()
 
 # Create vector store if not exists
-if not os.path.exists("vector_store/index.faiss"):
-    documents = load_pdfs("data")
+if not os.path.exists(VECTOR_STORE_FILE):
+    documents = load_pdfs(DATA_FOLDER)
     chunks = chunk_documents(documents)
+    
+    # Make sure folder exists
+    os.makedirs(VECTOR_STORE_FOLDER, exist_ok=True)
+    
     create_vector_store(chunks, embeddings)
-
-vectorstore = load_vector_store(embeddings)
 
 # User input
 query = st.text_input("Enter your question:")
