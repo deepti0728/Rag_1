@@ -7,12 +7,6 @@ def clean_text(text):
     return text
 
 def load_pdfs(folder_path):
-    import os
-    from langchain_community.document_loaders import PyPDFLoader
-
-    if not os.path.exists(folder_path):
-        raise FileNotFoundError(f"Data folder not found: {folder_path}")
-
     documents = []
 
     for file in os.listdir(folder_path):
