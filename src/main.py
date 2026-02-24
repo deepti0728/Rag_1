@@ -16,17 +16,17 @@ chunks = chunk_documents(documents)
 embeddings = get_embeddings()
 
 #  If vector_store folder doesn't exist → create it
-if not os.path.exists("vector_store/index.faiss"):
+if not os.path.exists("vector_store"):
     print("Creating vector store...")
     create_vector_store(chunks, embeddings)
 
 #  Load vector store
-vectorstore = load_vector_store(embeddings)
+vectorstore = load_vector_store()
 
 #  Ask question
 query = input("Ask your question: ")
 
-results = retrieve_documents(vectorstore, query)
+results = retrieve_documents(vectorstore, query,embeddings,k=5)
 
 # Combine retrieved context
 context = "\n".join([doc.page_content for doc in results])

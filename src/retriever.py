@@ -1,10 +1,16 @@
-def retrieve_documents(vectorstore, query):
-    results = vectorstore.similarity_search_with_score(query, k=5)
-
-    # Sort by best similarity
-    results = sorted(results, key=lambda x: x[1])
-
-    # Take top 3 best matches
-    top_docs = [doc for doc, score in results[:3]]
-
+def retrieve_documents(collection, query, embeddings, k=5):
+    query_emb = embeddings.embed_query(query)
+    results = collection.query(
+        query_embeddings=[query_emb],
+        n_results=k
+    )
+    # results['documents'][0] contains top chunks
+    top_chunks = results['documents'][0]
+    
+    # Convert them to objects with page_content to match old code
+    class Doc:
+        def __init__(self, content):
+            self.page_content = content
+    
+    top_docs = [Doc(text) for text in top_chunks]
     return top_docs
