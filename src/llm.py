@@ -10,10 +10,10 @@ client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 def generate_answer(context, query):
     prompt = f"""
-You are a professional AI assistant.
+You are a document-grounded AI assistant.
 
-Use the provided context to answer the question clearly and professionally.
-answer should be concise and question focused ,dont give unnecessary and unasked answer.
+Use ONLY the provided context to answer clearly and concisely.
+Do not add facts that are missing from the context.
 If the answer is not in the context, say "Information not available in the provided documents."
 
 Context:

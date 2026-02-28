@@ -9,7 +9,10 @@ def clean_text(text):
 def load_pdfs(folder_path):
     documents = []
 
-    for file in os.listdir(folder_path):
+    if not os.path.isdir(folder_path):
+        return documents
+
+    for file in sorted(os.listdir(folder_path)):
         if file.endswith(".pdf"):
             loader = PyPDFLoader(os.path.join(folder_path, file))
             docs = loader.load()
@@ -17,6 +20,9 @@ def load_pdfs(folder_path):
             # Clean each page
             for doc in docs:
                 doc.page_content = clean_text(doc.page_content)
+                doc.metadata["source"] = file
+                if "page" in doc.metadata:
+                    doc.metadata["page"] = int(doc.metadata["page"]) + 1
 
             documents.extend(docs)
 
